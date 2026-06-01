@@ -18,4 +18,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "http-server ./dist -p ${PORT:-8080} -a 0.0.0.0 --cors"]
+CMD ["sh", "-c", "http-server ./dist -p ${PORT:-8080} -a 0.0.0.0 --cors --single"]
