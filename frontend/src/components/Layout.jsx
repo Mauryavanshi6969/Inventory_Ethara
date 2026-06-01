@@ -5,11 +5,10 @@ import {
   Users,
   ShoppingCart,
   Menu,
-  X,
   Boxes,
   Zap,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -18,10 +17,19 @@ const navItems = [
   { to: '/orders',    label: 'Orders',    icon: ShoppingCart },
 ]
 
+const SIDEBAR_W = 240
+
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024)
   const location = useLocation()
   const currentPage = navItems.find(n => location.pathname.startsWith(n.to))?.label || 'Dashboard'
+
+  useEffect(() => {
+    const handler = () => setIsDesktop(window.innerWidth >= 1024)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex' }}>
@@ -133,8 +141,7 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column' }}
-        className="lg:ml-[240px]">
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginLeft: isDesktop ? `${SIDEBAR_W}px` : '0' }}>
         {/* Top bar */}
         <header style={{
           position: 'sticky', top: 0, zIndex: 10,
