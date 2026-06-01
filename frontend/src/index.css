@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    @apply bg-zinc-950 text-zinc-100;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-700 rounded-full;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-zinc-900 border border-zinc-800 rounded-xl;
+  }
+  .btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-150 text-sm;
+  }
+  .btn-secondary {
+    @apply bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium px-4 py-2 rounded-lg transition-colors duration-150 text-sm;
+  }
+  .btn-danger {
+    @apply bg-red-600/20 hover:bg-red-600/40 text-red-400 font-medium px-4 py-2 rounded-lg transition-colors duration-150 text-sm border border-red-600/30;
+  }
+  .input {
+    @apply bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent w-full transition-all duration-150;
+  }
+  .label {
+    @apply text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1 block;
+  }
+  .badge-success {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/20;
+  }
+  .badge-warning {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/20;
+  }
+  .badge-danger {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/15 text-red-400 border border-red-500/20;
+  }
+  .badge-info {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-500/15 text-indigo-400 border border-indigo-500/20;
+  }
+  .table-header {
+    @apply text-xs font-medium text-zinc-400 uppercase tracking-wider px-4 py-3 text-left;
+  }
+  .table-cell {
+    @apply px-4 py-3 text-sm text-zinc-300;
+  }
+  .table-row {
+    @apply border-b border-zinc-800/60 hover:bg-zinc-800/40 transition-colors duration-100;
+  }
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  }
+  .modal-box {
+    @apply bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-lg shadow-2xl;
+  }
+  .page-title {
+    @apply text-xl font-semibold text-zinc-100;
+  }
+  .section-subtitle {
+    @apply text-sm text-zinc-500;
+  }
+}

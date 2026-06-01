@@ -1,0 +1,75 @@
+# ──────────────────────────────────────────────────────────────
+# docker-compose.yml
+# Location : inventory-app/docker-compose.yml  (ROOT)
+#
+# Each service loads its OWN .env file:
+#   db       → uses root .env for POSTGRES_* vars
+#   backend  → loads backend/.env
+#   frontend → loads frontend/.env (VITE_API_URL passed as build arg)
+# ──────────────────────────────────────────────────────────────
+
+version: "3.9"
+
+services:
+
+  # ────────────────────────────────────────
+  # 1. PostgreSQL Database
+  # ────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: inventra_db
+    restart: unless-stopped
+    env_file:
+      - .env                         # reads POSTGRES_USER, PASSWORD, DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ────────────────────────────────────────
+  # 2. Backend — FastAPI
+  #    Dockerfile : backend/Dockerfile
+  #    Env file   : backend/.env
+  # ────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: inventra_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env               # DATABASE_URL, ALLOWED_ORIGINS
+    ports:
+      - "8000:8000"
+
+  # ────────────────────────────────────────
+  # 3. Frontend — React + Nginx
+  #    Dockerfile : frontend/Dockerfile
+  #    Env file   : frontend/.env
+  # ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}  # from root .env, injected at build time
+    container_name: inventra_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+# ────────────────────────────────────────
+# Named volume for Postgres persistence
+# ────────────────────────────────────────
+volumes:
+  postgres_data:

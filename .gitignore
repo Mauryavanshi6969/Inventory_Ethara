@@ -1,0 +1,45 @@
+# ──────────────────────────────────────────────────────────────
+# .gitignore
+# Location : inventory-app/.gitignore  (ROOT — one file for everything)
+# ──────────────────────────────────────────────────────────────
+
+# ── Environment files (never commit real credentials) ─────────
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+*.so
+
+# ── Node / Frontend ───────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ── Docker ────────────────────────────────────────────────────
+*.log
+
+# ── OS files ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / Editor ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
