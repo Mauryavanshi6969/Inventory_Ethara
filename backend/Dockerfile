@@ -25,5 +25,5 @@ COPY . .
 # Expose FastAPI port
 EXPOSE 8000
 
-# Start the server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start the server — use shell form so $PORT env var is properly expanded
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
