@@ -68,18 +68,20 @@ export default function Orders() {
 
   return (
     <>
-      <div className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }} className="animate-fade-in">
+
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
           <div>
             <h2 className="page-title">Orders</h2>
             <p className="section-subtitle">{orders.length} total orders</p>
           </div>
-          <button className="btn-primary flex items-center gap-2" onClick={() => setFormOpen(true)}>
+          <button className="btn-primary" onClick={() => setFormOpen(true)}>
             <Plus size={15} /> Create Order
           </button>
         </div>
 
+        {/* Table */}
         {orders.length === 0 ? (
           <div className="card">
             <EmptyState
@@ -87,48 +89,75 @@ export default function Orders() {
               title="No orders yet"
               description="Create your first order to get started"
               action={
-                <button className="btn-primary flex items-center gap-2" onClick={() => setFormOpen(true)}>
+                <button className="btn-primary" onClick={() => setFormOpen(true)}>
                   <Plus size={14} /> Create Order
                 </button>
               }
             />
           </div>
         ) : (
-          <div className="card overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b border-zinc-800">
-                  <tr>
-                    <th className="table-header">Order</th>
+          <div className="card" style={{ overflow: 'hidden' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <th className="table-header">Order ID</th>
                     <th className="table-header">Customer</th>
-                    <th className="table-header hidden sm:table-cell">Date</th>
+                    <th className="table-header">Date</th>
                     <th className="table-header">Total</th>
-                    <th className="table-header w-20">Actions</th>
+                    <th className="table-header" style={{ width: '90px' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {[...orders].reverse().map((order) => (
                     <tr key={order.id} className="table-row">
                       <td className="table-cell">
-                        <span className="font-mono text-indigo-400 text-xs">#{String(order.id).padStart(4, '0')}</span>
+                        <span style={{
+                          fontFamily: 'JetBrains Mono, monospace',
+                          fontSize: '0.8rem', fontWeight: 600,
+                          color: '#a78bfa',
+                          background: 'rgba(124,58,237,0.1)',
+                          border: '1px solid rgba(124,58,237,0.18)',
+                          padding: '3px 8px', borderRadius: '6px',
+                        }}>
+                          #{String(order.id).padStart(4, '0')}
+                        </span>
                       </td>
-                      <td className="table-cell text-zinc-200">{getCustomerName(order)}</td>
-                      <td className="table-cell hidden sm:table-cell text-zinc-500 text-xs">
+                      <td className="table-cell" style={{ color: '#f1f0ff', fontWeight: 500 }}>
+                        {getCustomerName(order)}
+                      </td>
+                      <td className="table-cell" style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                         {formatDate(order.created_at)}
                       </td>
-                      <td className="table-cell font-mono font-medium">
-                        ₹{parseFloat(order.total_amount || 0).toFixed(2)}
+                      <td className="table-cell">
+                        <span style={{
+                          fontFamily: 'JetBrains Mono, monospace',
+                          fontWeight: 600, color: '#22d3ee', fontSize: '0.875rem',
+                        }}>
+                          ₹{parseFloat(order.total_amount || 0).toFixed(2)}
+                        </span>
                       </td>
                       <td className="table-cell">
-                        <div className="flex items-center gap-1">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Link
                             to={`/orders/${order.id}`}
-                            className="p-1.5 rounded-lg text-zinc-500 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
+                            style={{
+                              padding: '6px', borderRadius: '8px',
+                              color: 'var(--text-muted)', textDecoration: 'none',
+                              display: 'flex', transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#a78bfa'; e.currentTarget.style.background = 'rgba(124,58,237,0.1)' }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent' }}
                           >
                             <Eye size={14} />
                           </Link>
                           <button
-                            className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                            style={{
+                              padding: '6px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                              background: 'transparent', color: 'var(--text-muted)', transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.background = 'rgba(239,68,68,0.1)' }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent' }}
                             onClick={() => setDeleteTarget(order)}
                           >
                             <Trash2 size={14} />

@@ -3,7 +3,11 @@ import { CheckCircle, XCircle, X } from 'lucide-react'
 
 export default function Toast({ toasts, removeToast }) {
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+    <div style={{
+      position: 'fixed', bottom: '20px', right: '20px',
+      zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '8px',
+      pointerEvents: 'none',
+    }}>
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={() => removeToast(toast.id)} />
       ))}
@@ -17,24 +21,55 @@ function ToastItem({ toast, onRemove }) {
     return () => clearTimeout(timer)
   }, [])
 
-  const isSuccess = toast.type === 'success'
+  const isSuccess = toast.type !== 'error'
 
   return (
     <div
-      className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border shadow-xl text-sm font-medium min-w-[260px] max-w-sm animate-slide-up
-        ${isSuccess
-          ? 'bg-zinc-900 border-emerald-500/30 text-emerald-400'
-          : 'bg-zinc-900 border-red-500/30 text-red-400'
-        }`}
-      style={{ animation: 'slideUp 0.2s ease-out' }}
+      className="animate-slide-right"
+      style={{
+        pointerEvents: 'auto',
+        display: 'flex', alignItems: 'center', gap: '10px',
+        padding: '12px 14px',
+        borderRadius: '12px',
+        minWidth: '280px', maxWidth: '360px',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        background: isSuccess
+          ? 'rgba(16, 185, 129, 0.1)'
+          : 'rgba(239, 68, 68, 0.1)',
+        border: isSuccess
+          ? '1px solid rgba(16,185,129,0.25)'
+          : '1px solid rgba(239,68,68,0.25)',
+        boxShadow: isSuccess
+          ? '0 8px 32px rgba(16,185,129,0.12), 0 2px 8px rgba(0,0,0,0.4)'
+          : '0 8px 32px rgba(239,68,68,0.12), 0 2px 8px rgba(0,0,0,0.4)',
+      }}
     >
-      {isSuccess
-        ? <CheckCircle size={16} className="flex-shrink-0" />
-        : <XCircle size={16} className="flex-shrink-0" />
-      }
-      <span className="flex-1 text-zinc-200">{toast.message}</span>
-      <button onClick={onRemove} className="text-zinc-600 hover:text-zinc-400 ml-1">
-        <X size={14} />
+      <div style={{
+        width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
+        background: isSuccess ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        {isSuccess
+          ? <CheckCircle size={15} color="#34d399" />
+          : <XCircle size={15} color="#f87171" />
+        }
+      </div>
+      <span style={{ flex: 1, fontSize: '0.8125rem', fontWeight: 500, color: '#f1f0ff' }}>
+        {toast.message}
+      </span>
+      <button
+        onClick={onRemove}
+        style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: 'var(--text-muted)', padding: '2px',
+          display: 'flex', alignItems: 'center',
+          transition: 'color 0.2s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.color = '#f1f0ff'}
+        onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+      >
+        <X size={13} />
       </button>
     </div>
   )

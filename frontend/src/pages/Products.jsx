@@ -70,15 +70,16 @@ export default function Products() {
 
   return (
     <>
-      <div className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }} className="animate-fade-in">
+
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
           <div>
             <h2 className="page-title">Products</h2>
-            <p className="section-subtitle">{products.length} total products</p>
+            <p className="section-subtitle">{products.length} products in inventory</p>
           </div>
           <button
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary"
             onClick={() => { setEditTarget(null); setFormOpen(true) }}
           >
             <Plus size={15} /> Add Product
@@ -86,10 +87,14 @@ export default function Products() {
         </div>
 
         {/* Search */}
-        <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+        <div style={{ position: 'relative' }}>
+          <Search size={15} style={{
+            position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+            color: 'var(--text-muted)', pointerEvents: 'none',
+          }} />
           <input
-            className="input pl-9"
+            className="input"
+            style={{ paddingLeft: '36px' }}
             placeholder="Search by name or SKU..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -105,7 +110,7 @@ export default function Products() {
               description={search ? 'Try a different search term' : 'Add your first product to get started'}
               action={
                 !search && (
-                  <button className="btn-primary flex items-center gap-2" onClick={() => setFormOpen(true)}>
+                  <button className="btn-primary" onClick={() => setFormOpen(true)}>
                     <Plus size={14} /> Add Product
                   </button>
                 )
@@ -113,35 +118,55 @@ export default function Products() {
             />
           </div>
         ) : (
-          <div className="card overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b border-zinc-800">
-                  <tr>
+          <div className="card" style={{ overflow: 'hidden' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <th className="table-header">Product</th>
                     <th className="table-header">SKU</th>
                     <th className="table-header">Price</th>
                     <th className="table-header">Stock</th>
-                    <th className="table-header w-20">Actions</th>
+                    <th className="table-header" style={{ width: '90px' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((p) => (
                     <tr key={p.id} className="table-row">
-                      <td className="table-cell font-medium text-zinc-200">{p.name}</td>
-                      <td className="table-cell font-mono text-zinc-500 text-xs">{p.sku}</td>
-                      <td className="table-cell font-mono">₹{parseFloat(p.price).toFixed(2)}</td>
+                      <td className="table-cell" style={{ fontWeight: 500, color: '#f1f0ff' }}>{p.name}</td>
+                      <td className="table-cell">
+                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                          {p.sku}
+                        </span>
+                      </td>
+                      <td className="table-cell">
+                        <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#22d3ee', fontWeight: 500 }}>
+                          ₹{parseFloat(p.price).toFixed(2)}
+                        </span>
+                      </td>
                       <td className="table-cell">{stockBadge(p.quantity)}</td>
                       <td className="table-cell">
-                        <div className="flex items-center gap-1">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <button
-                            className="p-1.5 rounded-lg text-zinc-500 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
+                            style={{
+                              padding: '6px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                              background: 'transparent', color: 'var(--text-muted)',
+                              transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#a78bfa'; e.currentTarget.style.background = 'rgba(124,58,237,0.1)' }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent' }}
                             onClick={() => { setEditTarget(p); setFormOpen(true) }}
                           >
                             <Pencil size={14} />
                           </button>
                           <button
-                            className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                            style={{
+                              padding: '6px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                              background: 'transparent', color: 'var(--text-muted)',
+                              transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.background = 'rgba(239,68,68,0.1)' }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent' }}
                             onClick={() => setDeleteTarget(p)}
                           >
                             <Trash2 size={14} />

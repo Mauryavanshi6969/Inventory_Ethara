@@ -7,87 +7,193 @@ import {
   Menu,
   X,
   Boxes,
+  Zap,
 } from 'lucide-react'
 import { useState } from 'react'
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/products', label: 'Products', icon: Package },
+  { to: '/products',  label: 'Products',  icon: Package },
   { to: '/customers', label: 'Customers', icon: Users },
-  { to: '/orders', label: 'Orders', icon: ShoppingCart },
+  { to: '/orders',    label: 'Orders',    icon: ShoppingCart },
 ]
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const location = useLocation()
-
   const currentPage = navItems.find(n => location.pathname.startsWith(n.to))?.label || 'Dashboard'
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex">
+    <div style={{ minHeight: '100vh', display: 'flex' }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-20 lg:hidden"
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.7)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 20,
+          }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-full w-60 bg-zinc-900 border-r border-zinc-800 z-30 flex flex-col transition-transform duration-200 lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+      <aside style={{
+        position: 'fixed', top: 0, left: 0, height: '100%', width: '240px',
+        background: 'rgba(8, 5, 26, 0.92)',
+        borderRight: '1px solid rgba(124, 58, 237, 0.12)',
+        backdropFilter: 'blur(30px)',
+        WebkitBackdropFilter: 'blur(30px)',
+        zIndex: 30,
+        display: 'flex', flexDirection: 'column',
+        transform: sidebarOpen ? 'translateX(0)' : undefined,
+        transition: 'transform 0.25s ease',
+      }}
+      className={`lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:block`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 py-5 border-b border-zinc-800">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-            <Boxes size={16} className="text-white" />
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '12px',
+          padding: '20px 20px',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+        }}>
+          <div style={{
+            width: '36px', height: '36px',
+            background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+            borderRadius: '10px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 15px rgba(124,58,237,0.4)',
+            flexShrink: 0,
+          }}>
+            <Boxes size={18} color="#fff" />
           </div>
-          <span className="font-semibold text-zinc-100 text-sm tracking-tight">Inventra</span>
+          <div>
+            <span style={{
+              fontWeight: 700, fontSize: '0.9375rem',
+              color: '#f1f0ff', letterSpacing: '-0.02em',
+            }}>Inventory</span>
+            <span style={{
+              fontWeight: 700, fontSize: '0.9375rem',
+              background: 'linear-gradient(90deg, #a78bfa, #22d3ee)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '-0.02em',
+            }}>Ethara</span>
+          </div>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5">
+        <nav style={{ flex: 1, padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {navItems.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
               onClick={() => setSidebarOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${
-                  isActive
-                    ? 'bg-indigo-600/20 text-indigo-400'
-                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
-                }`
-              }
+              style={({ isActive }) => ({
+                display: 'flex', alignItems: 'center', gap: '10px',
+                padding: '10px 12px', borderRadius: '10px',
+                fontSize: '0.875rem', fontWeight: 500,
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+                background: isActive ? 'rgba(124, 58, 237, 0.15)' : 'transparent',
+                color: isActive ? '#a78bfa' : 'rgba(148,137,186,0.8)',
+                border: isActive ? '1px solid rgba(124,58,237,0.25)' : '1px solid transparent',
+                boxShadow: isActive ? '0 0 20px rgba(124,58,237,0.1)' : 'none',
+              })}
             >
-              <Icon size={16} />
-              {label}
+              {({ isActive }) => (
+                <>
+                  <div style={{
+                    width: '28px', height: '28px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: '7px',
+                    background: isActive ? 'rgba(124,58,237,0.2)' : 'transparent',
+                  }}>
+                    <Icon size={15} />
+                  </div>
+                  {label}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        <div className="px-5 py-4 border-t border-zinc-800">
-          <p className="text-xs text-zinc-600 font-mono">v1.0.0</p>
+        {/* Footer */}
+        <div style={{
+          padding: '16px 20px',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          display: 'flex', alignItems: 'center', gap: '8px',
+        }}>
+          <Zap size={11} color="rgba(124,58,237,0.6)" />
+          <span style={{ fontSize: '0.7rem', color: 'rgba(78,72,112,0.8)', fontFamily: 'JetBrains Mono, monospace' }}>
+            v1.0.0
+          </span>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-60 flex flex-col min-h-screen">
+      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column' }}
+        className="lg:ml-[240px]">
         {/* Top bar */}
-        <header className="sticky top-0 z-10 bg-zinc-950/80 backdrop-blur border-b border-zinc-800/60 px-4 lg:px-6 py-3.5 flex items-center gap-3">
+        <header style={{
+          position: 'sticky', top: 0, zIndex: 10,
+          background: 'rgba(8,5,26,0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          padding: '0 24px',
+          height: '56px',
+          display: 'flex', alignItems: 'center', gap: '14px',
+        }}>
           <button
-            className="lg:hidden text-zinc-400 hover:text-zinc-100"
+            className="lg:hidden"
             onClick={() => setSidebarOpen(true)}
+            style={{
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '8px', padding: '6px 8px', cursor: 'pointer',
+              color: 'var(--text-secondary)',
+            }}
           >
-            <Menu size={20} />
+            <Menu size={18} />
           </button>
-          <h1 className="text-sm font-medium text-zinc-300">{currentPage}</h1>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{
+              display: 'inline-block', width: '6px', height: '6px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              boxShadow: '0 0 8px rgba(124,58,237,0.6)',
+            }} />
+            <h1 style={{
+              fontSize: '0.875rem', fontWeight: 600,
+              color: 'var(--text-primary)', letterSpacing: '-0.01em',
+            }}>{currentPage}</h1>
+          </div>
+
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              padding: '4px 10px',
+              background: 'rgba(16,185,129,0.1)',
+              border: '1px solid rgba(16,185,129,0.2)',
+              borderRadius: '99px',
+              fontSize: '0.7rem', fontWeight: 600,
+              color: '#34d399',
+              display: 'flex', alignItems: 'center', gap: '5px',
+            }}>
+              <span style={{
+                width: '5px', height: '5px', borderRadius: '50%',
+                background: '#34d399',
+                display: 'inline-block',
+                boxShadow: '0 0 6px #34d399',
+              }} />
+              Live
+            </div>
+          </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 px-4 lg:px-6 py-6">
+        <main style={{ flex: 1, padding: '28px 24px' }} className="animate-fade-in">
           <Outlet />
         </main>
       </div>

@@ -13,16 +13,33 @@ export default function Modal({ isOpen, onClose, title, children }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
-          <h2 className="text-base font-semibold text-zinc-100">{title}</h2>
+        {/* Header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '18px 24px',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#f1f0ff', letterSpacing: '-0.015em' }}>
+            {title}
+          </h2>
           <button
             onClick={onClose}
-            className="text-zinc-500 hover:text-zinc-200 transition-colors"
+            style={{
+              width: '28px', height: '28px', borderRadius: '8px',
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+              cursor: 'pointer', color: 'var(--text-muted)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#f1f0ff'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
           >
-            <X size={18} />
+            <X size={15} />
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
+
+        {/* Body */}
+        <div style={{ padding: '20px 24px' }}>{children}</div>
       </div>
     </div>
   )
